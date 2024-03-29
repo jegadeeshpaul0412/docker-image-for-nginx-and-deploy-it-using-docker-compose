@@ -1,0 +1,125 @@
+[ec2-user@ip-172-31-22-176 ~]$ pwd
+/home/ec2-user
+[ec2-user@ip-172-31-22-176 ~]$ ls
+dockerfile
+[ec2-user@ip-172-31-22-176 ~]$ rm -rf dockerfile/
+[ec2-user@ip-172-31-22-176 ~]$ mkdir exercise4
+[ec2-user@ip-172-31-22-176 ~]$ cd exercise4/
+[ec2-user@ip-172-31-22-176 exercise4]$ vi Dockerfile
+[ec2-user@ip-172-31-22-176 exercise4]$ cat Dockerfile
+# Use the official NGINX image as the base image
+FROM nginx:latest
+
+# Copy custom nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Create a directory for mounting volumes
+RUN mkdir -p /var/opt/nginx
+
+# Set the working directory
+WORKDIR /var/opt/nginx
+
+# Expose port 80
+EXPOSE 80
+
+# Start NGINX when the container starts
+CMD ["nginx", "-g", "daemon off;"]
+
+[ec2-user@ip-172-31-22-176 exercise4]$ vi docker-compose.yml
+[ec2-user@ip-172-31-22-176 exercise4]$ docker-compose build
+-bash: docker-compose: command not found
+[ec2-user@ip-172-31-22-176 exercise4]$ sudo apt install docker-compose
+sudo: apt: command not found
+[ec2-user@ip-172-31-22-176 exercise4]$ sudo yum install docker-compose
+Last metadata expiration check: 2:47:53 ago on Fri Mar 29 18:49:54 2024.
+No match for argument: docker-compose
+Error: Unable to find a match: docker-compose
+[ec2-user@ip-172-31-22-176 exercise4]$ sudo yum install docker-compose-plugin
+Last metadata expiration check: 2:48:55 ago on Fri Mar 29 18:49:54 2024.
+No match for argument: docker-compose-plugin
+Error: Unable to find a match: docker-compose-plugin
+[ec2-user@ip-172-31-22-176 exercise4]$ sudo apt-get update
+sudo: apt-get: command not found
+[ec2-user@ip-172-31-22-176 exercise4]$ sudo curl -L "https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 42.8M  100 42.8M    0     0  45.6M      0 --:--:-- --:--:-- --:--:-- 45.6M
+[ec2-user@ip-172-31-22-176 exercise4]$ sudo mv /usr/local/bin/docker-compose /usr/bin/docker-compose
+[ec2-user@ip-172-31-22-176 exercise4]$ sudo chmod +x /usr/bin/docker-compose
+[ec2-user@ip-172-31-22-176 exercise4]$ docker-compose build
+[+] Building 1.2s (6/8)
+ => [internal] load build definition from Dockerfile                                               0.0s
+ => => transferring dockerfile: 471B                                                               0.0s
+ => [internal] load metadata for docker.io/library/nginx:latest                                    1.0s
+ => [internal] load .dockerignore                                                                  0.0s
+ => => transferring context: 2B                                                                    0.0s
+ => [internal] load build context                                                                  0.0s
+ => => transferring context: 2B                                                                    0.0s
+ => CANCELED [1/4] FROM docker.io/library/nginx:latest@sha256:6db391d1c0cfb30588ba0bf72ea999404f2  0.1s
+ => => resolve docker.io/library/nginx:latest@sha256:6db391d1c0cfb30588ba0bf72ea999404f2764febf0f  0.0s
+ => => sha256:6db391d1c0cfb30588ba0bf72ea999404f2764febf0f1f196acd5867ac7efa7e 9.85kB / 9.85kB     0.0s
+ => => sha256:92b11f67642b62bbb98e7e49169c346b30e20cd3c1c034d31087e46924b9312e 7.02kB / 7.02kB     0.0s
+ => => sha256:52478f8cd6a142fd462f0a7614a7bb064e969a4c083648235d6943c786df8cc7 2.29kB / 2.29kB     0.0s
+ => ERROR [2/4] COPY nginx.conf /etc/nginx/nginx.conf                                              0.0s
+------
+ > [2/4] COPY nginx.conf /etc/nginx/nginx.conf:
+------
+failed to solve: failed to compute cache key: failed to calculate checksum of ref 5bf754d1-1b14-4a1c-a5dc-dcb4cc8775db::vox50rnp0n1tyum6uwwsem5ps: "/nginx.conf": not found
+[ec2-user@ip-172-31-22-176 exercise4]$ vi nginx.conf
+[ec2-user@ip-172-31-22-176 exercise4]$ docker-compose build
+[+] Building 6.3s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                               0.0s
+ => => transferring dockerfile: 471B                                                               0.0s
+ => [internal] load metadata for docker.io/library/nginx:latest                                    0.3s
+ => [internal] load .dockerignore                                                                  0.0s
+ => => transferring context: 2B                                                                    0.0s
+ => [internal] load build context                                                                  0.0s
+ => => transferring context: 1.93kB                                                                0.0s
+ => [1/4] FROM docker.io/library/nginx:latest@sha256:6db391d1c0cfb30588ba0bf72ea999404f2764febf0f  5.1s
+ => => resolve docker.io/library/nginx:latest@sha256:6db391d1c0cfb30588ba0bf72ea999404f2764febf0f  0.0s
+ => => sha256:6db391d1c0cfb30588ba0bf72ea999404f2764febf0f1f196acd5867ac7efa7e 9.85kB / 9.85kB     0.0s
+ => => sha256:39fc875bd2b2e4f867e8e5cc5ad43bd5d6650ddeaf8c28b04f374f7fbca085f3 624B / 624B         0.4s
+ => => sha256:8a1e25ce7c4f75e372e9884f8f7b1bedcfe4a7a7d452eb4b0a1c7477c9a90345 29.12MB / 29.12MB   0.7s
+ => => sha256:e78b137be3552e1f36d84cb01c533a23febe4c48f6fcdff5d5b26a45a636053b 41.39MB / 41.39MB   0.9s
+ => => sha256:52478f8cd6a142fd462f0a7614a7bb064e969a4c083648235d6943c786df8cc7 2.29kB / 2.29kB     0.0s
+ => => sha256:92b11f67642b62bbb98e7e49169c346b30e20cd3c1c034d31087e46924b9312e 7.02kB / 7.02kB     0.0s
+ => => sha256:035788421403127b57e688a82706198331f06545a955b526f89f2bf53f52b078 954B / 954B         0.6s
+ => => sha256:87c3fb37cbf2f763f67f3b270aa0785ca05a2caedac399b4bfeedfd0ccd77d87 392B / 392B         0.7s
+ => => sha256:c5cdd1ce752da415a6563d9432e1ee718b2f4ba353ee2bb7c8ce2aa78d5b4ee1 1.21kB / 1.21kB     0.9s
+ => => sha256:33952c5995320e59a81112f411bfb02e097562a72c12e85828da51132ace47cd 1.40kB / 1.40kB     0.9s
+ => => extracting sha256:8a1e25ce7c4f75e372e9884f8f7b1bedcfe4a7a7d452eb4b0a1c7477c9a90345          1.9s
+ => => extracting sha256:e78b137be3552e1f36d84cb01c533a23febe4c48f6fcdff5d5b26a45a636053b          1.9s
+ => => extracting sha256:39fc875bd2b2e4f867e8e5cc5ad43bd5d6650ddeaf8c28b04f374f7fbca085f3          0.0s
+ => => extracting sha256:035788421403127b57e688a82706198331f06545a955b526f89f2bf53f52b078          0.0s
+ => => extracting sha256:87c3fb37cbf2f763f67f3b270aa0785ca05a2caedac399b4bfeedfd0ccd77d87          0.0s
+ => => extracting sha256:c5cdd1ce752da415a6563d9432e1ee718b2f4ba353ee2bb7c8ce2aa78d5b4ee1          0.0s
+ => => extracting sha256:33952c5995320e59a81112f411bfb02e097562a72c12e85828da51132ace47cd          0.0s
+ => [2/4] COPY nginx.conf /etc/nginx/nginx.conf                                                    0.2s
+ => [3/4] RUN mkdir -p /var/opt/nginx                                                              0.4s
+ => [4/4] WORKDIR /var/opt/nginx                                                                   0.0s
+ => exporting to image                                                                             0.1s
+ => => exporting layers                                                                            0.1s
+ => => writing image sha256:5c187bdbc94789e9d380b322d54a53e6f818ef7732877e6ca761143b6d714f9b       0.0s
+ => => naming to docker.io/library/exercise4-nginx                                                 0.0s
+[ec2-user@ip-172-31-22-176 exercise4]$ docker-compose up -d
+[+] Running 2/2
+ ⠿ Network exercise4_default    Created                                                            0.2s
+ ⠿ Container exercise4-nginx-1  Started                                                            0.7s
+[ec2-user@ip-172-31-22-176 exercise4]$ ^C
+[ec2-user@ip-172-31-22-176 exercise4]$ docker tag docker.io jegadeeshpaul/nginx-custom:latest
+Error response from daemon: No such image: docker.io:latest
+[ec2-user@ip-172-31-22-176 exercise4]$ docker tag docker.io/library/exercise4-nginx jegadeeshpaul/nginx-custom:latest
+[ec2-user@ip-172-31-22-176 exercise4]$ docker push jegadeeshpaul/nginx-custom:latest
+The push refers to repository [docker.io/jegadeeshpaul/nginx-custom]
+5f70bf18a086: Preparing
+a8fad62e1c32: Preparing
+8b59a49c7ef4: Preparing
+fd31601f0be4: Preparing
+93b4c8c4ac05: Preparing
+b7df9f234b50: Waiting
+ab75a0b61bd1: Waiting
+c1b1bf2f95dc: Waiting
+4d99aab1eed4: Waiting
+a483da8ab3e9: Waiting
+denied: requested access to the resource is denied
